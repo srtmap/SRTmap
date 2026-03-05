@@ -88,7 +88,7 @@ docker-compose up -d
 
 ```bash
 # 1. Clone
-git clone https://github.com/srtmap/srtmap.git
+git clone https://github.com/srtmap/SRTmap.git
 cd srtmap
 
 # 2. Install dependencies
