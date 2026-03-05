@@ -4,7 +4,7 @@
 
 View and fix GPS tracks from DJI subtitle (`.SRT`) files directly in your browser. Zero-coordinate repair, interactive map, GPX export, multi-file support, measure tools, and optional cloud storage.
 
-> Live at **[srtmap.app](https://srtmap.app)** &middot; MIT License &middot; Open Source
+> Live at **[srtmap.online](https://srtmap.online)** &middot; MIT License &middot; Open Source
 
 ![SRTmap screenshot placeholder](https://placehold.co/1200x630/111827/ef4444?text=SRTmap)
 
@@ -187,7 +187,7 @@ All API endpoints require `Authorization: Bearer <token>`.
 ### Fix endpoint example
 
 ```bash
-curl -X POST https://srtmap.app/api/files/clxxxxx/fix \
+curl -X POST https://srtmap.online/api/files/clxxxxx/fix \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"mode": "nearest"}'
