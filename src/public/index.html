@@ -438,7 +438,37 @@ section {
   overflow-x: auto;
   margin-top: 24px;
   line-height: 1.8;
+  white-space: pre;
 }
+
+/* drone silhouette hero background */
+.hero { position: relative; }
+.hero-drone-bg {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 520px; height: 520px;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 0;
+}
+.hero > *:not(.hero-drone-bg) { position: relative; z-index: 1; }
+
+/* badge right side in nav */
+.badge-oss-right {
+  background: rgba(239,68,68,0.1);
+  color: #fca5a5;
+  border: 1px solid rgba(239,68,68,0.25);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* clickable mockup files */
+.mockup-file-dim { cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.mockup-file-dim:hover { background: rgba(255,255,255,0.04); border-color: #4b5563; }
 
 .code-block .c-comment { color: #6e7681; }
 .code-block .c-key     { color: #79c0ff; }
@@ -506,8 +536,9 @@ footer {
 <!-- ── Navigation ─────────────────────────────────────────────────────────── -->
 <nav>
   <a href="/" class="nav-logo">&#x1F6F8; SRT<span>map</span></a>
-  <span class="badge-oss">Free &amp; Open Source</span>
+  <span class="badge-oss">Open Source</span>
   <div class="nav-links">
+    <span class="badge-oss-right">&#x1F6F8; Free &amp; Open Source Drone Tool</span>
     <a href="https://github.com/srtmap/SRTmap" class="nav-link" target="_blank" rel="noopener">GitHub</a>
     <a href="#features" class="nav-link">Features</a>
     <a href="#pricing" class="nav-link">Pricing</a>
@@ -518,10 +549,26 @@ footer {
 
 <!-- ── Hero ───────────────────────────────────────────────────────────────── -->
 <div class="hero">
-  <div class="hero-eyebrow">
-    <span>&#x1F6F8;</span>
-    <span>Free &amp; Open Source Drone Tool</span>
-  </div>
+  <!-- Drone silhouette background -->
+  <svg class="hero-drone-bg" viewBox="0 0 200 200" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <!-- arms -->
+    <line x1="100" y1="100" x2="38" y2="38" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="162" y2="38" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="38" y2="162" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    <line x1="100" y1="100" x2="162" y2="162" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    <!-- body -->
+    <rect x="82" y="82" width="36" height="36" rx="6" fill="white"/>
+    <!-- rotors -->
+    <circle cx="38" cy="38" r="22" fill="none" stroke="white" stroke-width="5"/>
+    <circle cx="162" cy="38" r="22" fill="none" stroke="white" stroke-width="5"/>
+    <circle cx="38" cy="162" r="22" fill="none" stroke="white" stroke-width="5"/>
+    <circle cx="162" cy="162" r="22" fill="none" stroke="white" stroke-width="5"/>
+    <!-- rotor hubs -->
+    <circle cx="38" cy="38" r="5" fill="white"/>
+    <circle cx="162" cy="38" r="5" fill="white"/>
+    <circle cx="38" cy="162" r="5" fill="white"/>
+    <circle cx="162" cy="162" r="5" fill="white"/>
+  </svg>
   <h1>Your drone flights,<br><span class="accent">on the map.</span></h1>
   <p class="hero-sub">
     View, fix and analyze GPS tracks from DJI SRT subtitle files.
@@ -541,21 +588,21 @@ footer {
       <div class="mockup-dot" style="background:#ef4444"></div>
       <div class="mockup-dot" style="background:#f59e0b"></div>
       <div class="mockup-dot" style="background:#10b981"></div>
-      <a href="/app" style="margin-left:8px;font-size:12px;color:#6b7280;text-decoration:none;cursor:pointer" onmouseover="this.style.color='#e5e7eb'" onmouseout="this.style.color='#6b7280'">SRTmap — GPS Track Viewer</a>
+      <span style="margin-left:8px;font-size:12px;color:#6b7280">SRTmap — GPS Track Viewer</span>
     </div>
     <div class="mockup-body">
       <div class="mockup-sidebar">
         <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px">Files</div>
-        <div class="mockup-file">
+        <div class="mockup-file" id="mf-0" onclick="selectMockupFile(0)">
           <div class="mf-name">DJI_0042.SRT</div>
           <div class="mf-meta">1,842 frames &middot; GPS OK</div>
           <span class="mf-badge">&#x2713; GPS OK</span>
         </div>
-        <div class="mockup-file-dim">
+        <div class="mockup-file-dim" id="mf-1" onclick="selectMockupFile(1)">
           <div class="mf-name">DJI_0043.SRT</div>
           <div class="mf-meta">2,104 frames</div>
         </div>
-        <div class="mockup-file-dim">
+        <div class="mockup-file-dim" id="mf-2" onclick="selectMockupFile(2)">
           <div class="mf-name">DJI_0044.SRT</div>
           <div class="mf-meta">987 frames</div>
         </div>
@@ -583,7 +630,7 @@ footer {
           <line x1="0" y1="280" x2="600" y2="180" stroke="#374151" stroke-width="1.5" opacity="0.5"/>
           <line x1="200" y1="0" x2="280" y2="320" stroke="#374151" stroke-width="1.5" opacity="0.5"/>
           <!-- Flight track -->
-          <path d="M 80 260 C 120 220, 160 200, 210 190 C 260 180, 290 160, 330 140 C 370 120, 400 100, 440 90 C 480 80, 510 95, 520 120" stroke="#ef4444" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"/>
+          <path id="flight-path" d="M 80 260 C 120 220, 160 200, 210 190 C 260 180, 290 160, 330 140 C 370 120, 400 100, 440 90 C 480 80, 510 95, 520 120" stroke="#ef4444" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.9"/>
           <!-- Start dot -->
           <circle cx="80" cy="260" r="7" fill="#10b981"/>
           <circle cx="80" cy="260" r="11" fill="none" stroke="#10b981" stroke-width="1.5" opacity="0.5"/>
@@ -591,6 +638,24 @@ footer {
           <circle cx="520" cy="120" r="7" fill="#ef4444"/>
           <!-- Max altitude dot -->
           <circle cx="440" cy="90" r="5" fill="#f59e0b"/>
+          <!-- Animated drone -->
+          <g id="mockup-drone">
+            <!-- arms -->
+            <line x1="-7" y1="-7" x2="7" y2="7" stroke="#d1d5db" stroke-width="1.5"/>
+            <line x1="7" y1="-7" x2="-7" y2="7" stroke="#d1d5db" stroke-width="1.5"/>
+            <!-- rotors -->
+            <circle cx="-7" cy="-7" r="4.5" fill="none" stroke="#93c5fd" stroke-width="1.2" opacity="0.9"/>
+            <circle cx="7" cy="-7" r="4.5" fill="none" stroke="#93c5fd" stroke-width="1.2" opacity="0.9"/>
+            <circle cx="-7" cy="7" r="4.5" fill="none" stroke="#93c5fd" stroke-width="1.2" opacity="0.9"/>
+            <circle cx="7" cy="7" r="4.5" fill="none" stroke="#93c5fd" stroke-width="1.2" opacity="0.9"/>
+            <!-- body -->
+            <rect x="-3.5" y="-3.5" width="7" height="7" rx="1.5" fill="#e5e7eb"/>
+            <!-- shadow glow -->
+            <circle cx="0" cy="0" r="10" fill="#60a5fa" opacity="0.12"/>
+            <animateMotion dur="7s" repeatCount="indefinite" rotate="auto">
+              <mpath href="#flight-path"/>
+            </animateMotion>
+          </g>
         </svg>
         <div class="mockup-stats">
           <div class="mst-row"><span class="mst-label">Valid GPS</span><span class="mst-val">1,842</span></div>
@@ -743,7 +808,7 @@ footer {
       <div class="deploy-step">
         <div class="ds-num">03</div>
         <div class="ds-title">Run with Docker</div>
-        <div class="ds-desc">docker-compose up — PostgreSQL and app start together</div>
+        <div class="ds-desc">docker-compose up — SQLite included, no external database needed</div>
       </div>
       <div class="deploy-step">
         <div class="ds-num">04</div>
@@ -752,29 +817,20 @@ footer {
       </div>
     </div>
 
-    <div class="code-block">
-<span class="c-comment"># docker-compose.yml</span>
+    <div class="code-block"><span class="c-comment"># docker-compose.yml</span>
 <span class="c-key">version</span>: <span class="c-str">'3.9'</span>
 <span class="c-key">services</span>:
   <span class="c-key">app</span>:
     <span class="c-key">image</span>: <span class="c-val">ghcr.io/srtmap/srtmap:latest</span>
     <span class="c-key">ports</span>: [<span class="c-str">"3000:3000"</span>]
     <span class="c-key">environment</span>:
-      <span class="c-key">DATABASE_URL</span>: <span class="c-str">postgresql://srtmap:srtmap@db:5432/srtmap</span>
-      <span class="c-key">JWT_SECRET</span>: <span class="c-str">change-me-in-production</span>
-    <span class="c-key">depends_on</span>: [<span class="c-val">db</span>]
-    <span class="c-key">volumes</span>: [<span class="c-str">./uploads:/app/uploads</span>]
-
-  <span class="c-key">db</span>:
-    <span class="c-key">image</span>: <span class="c-val">postgres:16-alpine</span>
-    <span class="c-key">environment</span>:
-      <span class="c-key">POSTGRES_DB</span>: <span class="c-str">srtmap</span>
-      <span class="c-key">POSTGRES_USER</span>: <span class="c-str">srtmap</span>
-      <span class="c-key">POSTGRES_PASSWORD</span>: <span class="c-str">srtmap</span>
-    <span class="c-key">volumes</span>: [<span class="c-str">pgdata:/var/lib/postgresql/data</span>]
+      <span class="c-key">DATA_PATH</span>: <span class="c-str">/app/data</span>
+      <span class="c-key">STORAGE_PATH</span>: <span class="c-str">/app/data/uploads</span>
+    <span class="c-key">volumes</span>:
+      - <span class="c-str">srtmap_data:/app/data</span>
 
 <span class="c-key">volumes</span>:
-  <span class="c-val">pgdata</span>:
+  <span class="c-val">srtmap_data</span>:
     </div>
 
     <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
@@ -801,8 +857,36 @@ footer {
     <a href="#selfhost">Self-host</a>
     <a href="https://srtmap.online">srtmap.online</a>
   </div>
-  <div class="footer-copy">&copy; 2024 SRTmap. MIT License.</div>
+  <div class="footer-copy">&copy; 2026 SRTmap. MIT License.</div>
+  <div style="margin-top:10px;font-size:11px;color:#4b5563;max-width:600px;margin-left:auto;margin-right:auto;text-align:center;line-height:1.5">
+    DJI® is a registered trademark of SZ DJI Technology Co., Ltd. SRTmap is an independent open-source project and is not affiliated with, endorsed by, or sponsored by DJI.
+  </div>
 </footer>
 
+<script>
+// Mockup file selector
+const mockupFiles = [
+  { frames: '1,842', meta: '1,842 frames &middot; GPS OK', badge: '<span class="mf-badge">&#x2713; GPS OK</span>' },
+  { frames: '2,104', meta: '2,104 frames', badge: '' },
+  { frames: '987',   meta: '987 frames',   badge: '' },
+];
+
+function selectMockupFile(idx) {
+  mockupFiles.forEach((_, i) => {
+    const el = document.getElementById('mf-' + i);
+    if (!el) return;
+    if (i === idx) {
+      el.className = 'mockup-file';
+      el.innerHTML = `<div class="mf-name">${['DJI_0042.SRT','DJI_0043.SRT','DJI_0044.SRT'][i]}</div>
+        <div class="mf-meta">${mockupFiles[i].meta}</div>
+        ${mockupFiles[i].badge || '<span class="mf-badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;border-color:rgba(59,130,246,0.3)">&#x2713; Loaded</span>'}`;
+    } else {
+      el.className = 'mockup-file-dim';
+      el.innerHTML = `<div class="mf-name">${['DJI_0042.SRT','DJI_0043.SRT','DJI_0044.SRT'][i]}</div>
+        <div class="mf-meta">${mockupFiles[i].meta}</div>`;
+    }
+  });
+}
+</script>
 </body>
 </html>
