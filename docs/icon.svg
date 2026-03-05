@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="100%" style="stop-color:#16213e"/>
+    </linearGradient>
+    <linearGradient id="trackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4f8ef7;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#4f8ef7;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#bg)"/>
+
+  <!-- GPS track path -->
+  <polyline
+    points="52,168 80,140 100,155 130,95 158,118 188,72"
+    fill="none"
+    stroke="url(#trackGrad)"
+    stroke-width="5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Start dot -->
+  <circle cx="52" cy="168" r="6" fill="#4f8ef7" opacity="0.6"/>
+
+  <!-- End dot / destination pin -->
+  <circle cx="188" cy="72" r="8" fill="#4f8ef7"/>
+  <circle cx="188" cy="72" r="4" fill="#ffffff"/>
+
+  <!-- Drone body -->
+  <rect x="118" y="94" width="20" height="12" rx="3" fill="#ffffff" opacity="0.95"/>
+
+  <!-- Drone arms -->
+  <line x1="118" y1="96" x2="104" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <line x1="138" y1="96" x2="152" y2="86" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <line x1="118" y1="104" x2="104" y2="114" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+  <line x1="138" y1="104" x2="152" y2="114" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- Rotors -->
+  <ellipse cx="104" cy="84" rx="10" ry="3" fill="none" stroke="#4f8ef7" stroke-width="2.5" opacity="0.9"/>
+  <ellipse cx="152" cy="84" rx="10" ry="3" fill="none" stroke="#4f8ef7" stroke-width="2.5" opacity="0.9"/>
+  <ellipse cx="104" cy="116" rx="10" ry="3" fill="none" stroke="#4f8ef7" stroke-width="2.5" opacity="0.9"/>
+  <ellipse cx="152" cy="116" rx="10" ry="3" fill="none" stroke="#4f8ef7" stroke-width="2.5" opacity="0.9"/>
+
+  <!-- "SRT" label -->
+  <text x="128" y="196" font-family="'SF Mono', 'Fira Code', monospace" font-size="22" font-weight="700" fill="#4f8ef7" text-anchor="middle" letter-spacing="3">SRT</text>
+</svg>
