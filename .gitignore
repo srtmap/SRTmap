@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Runtime data (SQLite DB + uploads)
+data/
+uploads/
+
+# OS
+.DS_Store
+._*
+
+# Editor
+.vscode/
+.idea/
+*.swp
