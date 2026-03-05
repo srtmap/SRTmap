@@ -6,7 +6,7 @@ View and fix GPS tracks from DJI subtitle (`.SRT`) files directly in your browse
 
 > Live at **[srtmap.online](https://srtmap.online)** &middot; MIT License &middot; Open Source
 
-SRTmap — GPS Track Viewer
+![SRTmap — GPS Track Viewer](docs/screenshot.png)
 
 ---
 
