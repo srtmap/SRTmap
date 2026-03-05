@@ -26,13 +26,11 @@ View and fix GPS tracks from DJI subtitle (`.SRT`) files directly in your browse
 
 The fastest way to deploy SRTmap publicly:
 
-1. Fork this repository
-2. Click **Deploy to Railway** below
-3. Add a PostgreSQL database in Railway
-4. Set the required environment variables (see table below)
-5. Deploy — Railway runs `prisma migrate deploy` automatically
+1. Click **Deploy to Railway** below
+2. Railway provisions the service and persistent volume automatically
+3. Your instance is live — no database setup needed (SQLite is embedded)
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/srtmap)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/srtmap)
 
 ---
 
