@@ -375,6 +375,21 @@ section {
   font-weight: 700;
   white-space: nowrap;
 }
+.pricing-card.coming-soon { opacity: 0.55; pointer-events: none; }
+.pricing-card.coming-soon::after {
+  content: 'Coming Soon';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--muted);
+  color: var(--bg);
+  padding: 3px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
 .pc-name  { font-size: 14px; font-weight: 600; color: var(--muted); margin-bottom: 8px; }
 .pc-price { font-size: 48px; font-weight: 900; color: #f9fafb; line-height: 1; margin-bottom: 4px; }
@@ -748,7 +763,7 @@ footer {
     </div>
 
     <!-- Starter -->
-    <div class="pricing-card featured">
+    <div class="pricing-card coming-soon">
       <div class="pc-name">Starter</div>
       <div class="pc-price"><sup>$</sup>1<span>/mo</span></div>
       <div class="pc-tagline">For regular drone pilots</div>
@@ -766,7 +781,7 @@ footer {
     </div>
 
     <!-- Pro -->
-    <div class="pricing-card">
+    <div class="pricing-card coming-soon">
       <div class="pc-name">Pro</div>
       <div class="pc-price"><sup>$</sup>5<span>/mo</span></div>
       <div class="pc-tagline">For professionals &amp; teams</div>
