@@ -124,7 +124,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 /* ── Map ─────────────────────────────────────────────────────────────────── */
 #map-wrap { flex: 1; position: relative; }
 #map { width: 100%; height: 100%; }
-#map-stats { position: absolute; bottom: 28px; left: 10px; z-index: 500; background: rgba(17,24,39,0.88); backdrop-filter: blur(4px); padding: 10px 13px; border-radius: 8px; font-size: 12px; min-width: 155px; border: 1px solid #374151; pointer-events: none; display: none; }
+#map-stats { position: absolute; bottom: 60px; left: 10px; z-index: 500; background: rgba(17,24,39,0.88); backdrop-filter: blur(4px); padding: 10px 13px; border-radius: 8px; font-size: 12px; min-width: 155px; border: 1px solid #374151; pointer-events: none; display: none; }
 #map-stats .ms-row { display: flex; justify-content: space-between; gap: 14px; margin-bottom: 3px; }
 #map-stats .ms-row:last-child { margin-bottom: 0; }
 #map-stats .ms-label { color: #6b7280; }
@@ -143,6 +143,42 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .ruler-tooltip { background: rgba(17,24,39,.9) !important; color: #60a5fa !important; border: 1px solid #374151 !important; border-radius: 5px !important; font-size: 12px !important; font-weight: 700 !important; padding: 3px 9px !important; box-shadow: 0 2px 6px rgba(0,0,0,.4) !important; white-space: nowrap; }
 .ruler-tooltip::before { display: none !important; }
 .leaflet-interactive { cursor: pointer; }
+/* ── Player ──────────────────────────────────────────────────────────────── */
+#player-bar {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 500;
+  background: rgba(17,24,39,0.92); backdrop-filter: blur(6px);
+  border-top: 1px solid #374151;
+  padding: 8px 14px; display: none; align-items: center; gap: 10px;
+}
+#player-bar.open { display: flex; }
+.pl-btn {
+  width: 32px; height: 32px; border-radius: 6px; border: none;
+  background: rgba(255,255,255,0.08); color: #e5e7eb; cursor: pointer;
+  font-size: 15px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+}
+.pl-btn:hover { background: rgba(255,255,255,0.15); }
+.pl-btn.playing { background: #ef4444; color: white; }
+#pl-timeline {
+  flex: 1; -webkit-appearance: none; appearance: none;
+  height: 4px; background: #374151; border-radius: 2px; outline: none; cursor: pointer;
+}
+#pl-timeline::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px;
+  background: #ef4444; border-radius: 50%; border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4); cursor: grab;
+}
+#pl-timeline::-moz-range-thumb {
+  width: 14px; height: 14px; background: #ef4444; border-radius: 50%;
+  border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.4); cursor: grab;
+}
+#pl-time { font-size: 11px; color: #9ca3af; min-width: 90px; text-align: center; font-family: monospace; white-space: nowrap; }
+#pl-info { font-size: 11px; color: #6b7280; white-space: nowrap; }
+#pl-speed { width: 32px; height: 32px; border-radius: 6px; border: 1px solid #374151; background: transparent; color: #9ca3af; cursor: pointer; font-size: 10px; font-weight: 700; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+#pl-speed:hover { border-color: #6b7280; color: #f3f4f6; }
+#pl-close { width: 24px; height: 24px; border-radius: 4px; border: none; background: transparent; color: #4b5563; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+#pl-close:hover { color: #ef4444; }
+
 #map-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: #4b5563; pointer-events: none; z-index: 400; }
 #map-empty .me-icon { font-size: 48px; }
 #map-empty p { font-size: 14px; }
@@ -269,6 +305,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
     <div id="click-hint">📍 Click on map to place fix point — drag to adjust</div>
     <div id="measure-bar">
+      <button class="meas-btn" id="meas-play" title="Play track" onclick="openPlayer()">&#9654;</button>
       <button class="meas-btn" id="meas-ruler"   title="Ruler (2 points)" onclick="toggleMeasure('ruler')">📏</button>
       <button class="meas-btn" id="meas-polygon" title="Polygon / polyline" onclick="toggleMeasure('polygon')">⬡</button>
       <button class="meas-btn clear-btn" title="Clear measurements" onclick="clearMeasure()">✕</button>
@@ -277,6 +314,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="mr-title" id="mr-title">Distance</div>
       <div class="mr-val"   id="mr-val">—</div>
       <div class="mr-sub"   id="mr-sub"></div>
+    </div>
+    <div id="player-bar">
+      <button class="pl-btn" id="pl-play" onclick="togglePlay()" title="Play / Pause">&#9654;</button>
+      <input type="range" id="pl-timeline" min="0" max="100" value="0" oninput="seekPlayer(this.value)">
+      <span id="pl-time">0:00 / 0:00</span>
+      <span id="pl-info"></span>
+      <button id="pl-speed" onclick="cycleSpeed()" title="Playback speed">1x</button>
+      <button id="pl-close" onclick="closePlayer()" title="Close player">&#x2715;</button>
     </div>
     <div id="map-empty">
       <div class="me-icon">🗺️</div>
@@ -543,6 +588,7 @@ function selectFile(idx) {
   S.idx = idx;
   S.clickLL = null;
   S.fixCoords = null;
+  closePlayer();
   if (fixMarker) { map.removeLayer(fixMarker); fixMarker = null; }
   if (S.showAll) {
     renderAllTracks(true);
@@ -945,6 +991,144 @@ function updateMeasureResult() {
 
 function fmtDist(m)  { return m >= 1000 ? `${(m/1000).toFixed(2)} km` : `${m.toFixed(0)} m`; }
 function fmtArea(m2) { return m2 >= 1e6 ? `${(m2/1e6).toFixed(3)} km²` : `${Math.round(m2).toLocaleString()} m²`; }
+
+// ── Track Player ────────────────────────────────────────────────────────────────
+const PL = {
+  playing: false,
+  frameIdx: 0,
+  frames: [],    // valid frames for current file
+  speed: 1,
+  speeds: [1, 2, 4, 8, 16],
+  speedIdx: 0,
+  raf: null,
+  lastTick: 0,
+  marker: null,
+  trail: null,
+};
+
+function openPlayer() {
+  const f = S.files[S.idx];
+  if (!f) return;
+  const valid = f.frames.filter(v => !v.zero);
+  if (valid.length < 2) return;
+
+  PL.frames = valid;
+  PL.frameIdx = 0;
+  PL.playing = false;
+  PL.speedIdx = 0;
+  PL.speed = 1;
+
+  const bar = document.getElementById('player-bar');
+  bar.classList.add('open');
+  document.getElementById('pl-speed').textContent = '1x';
+  document.getElementById('pl-play').innerHTML = '&#9654;';
+  document.getElementById('pl-play').classList.remove('playing');
+  document.getElementById('meas-play').classList.add('active');
+
+  const slider = document.getElementById('pl-timeline');
+  slider.max = valid.length - 1;
+  slider.value = 0;
+
+  // remove old player layers
+  if (PL.marker) { map.removeLayer(PL.marker); PL.marker = null; }
+  if (PL.trail)  { map.removeLayer(PL.trail);  PL.trail = null; }
+
+  PL.trail = L.polyline([], { color: '#facc15', weight: 3, opacity: 0.9 }).addTo(map);
+
+  const fr = valid[0];
+  PL.marker = L.marker([fr.lat, fr.lon], {
+    icon: L.divIcon({
+      html: `<div style="width:14px;height:14px;background:#facc15;border-radius:50%;border:2.5px solid white;box-shadow:0 2px 8px rgba(0,0,0,.5)"></div>`,
+      iconSize: [14,14], iconAnchor: [7,7], className: ''
+    })
+  }).addTo(map);
+
+  updatePlayerUI();
+}
+
+function closePlayer() {
+  PL.playing = false;
+  if (PL.raf) { cancelAnimationFrame(PL.raf); PL.raf = null; }
+  if (PL.marker) { map.removeLayer(PL.marker); PL.marker = null; }
+  if (PL.trail)  { map.removeLayer(PL.trail);  PL.trail = null; }
+  document.getElementById('player-bar').classList.remove('open');
+  document.getElementById('meas-play').classList.remove('active');
+}
+
+function togglePlay() {
+  if (PL.frames.length < 2) return;
+  PL.playing = !PL.playing;
+  const btn = document.getElementById('pl-play');
+  if (PL.playing) {
+    btn.innerHTML = '&#9646;&#9646;';
+    btn.classList.add('playing');
+    if (PL.frameIdx >= PL.frames.length - 1) { PL.frameIdx = 0; PL.trail.setLatLngs([]); }
+    PL.lastTick = performance.now();
+    PL.raf = requestAnimationFrame(playerTick);
+  } else {
+    btn.innerHTML = '&#9654;';
+    btn.classList.remove('playing');
+    if (PL.raf) { cancelAnimationFrame(PL.raf); PL.raf = null; }
+  }
+}
+
+function playerTick(now) {
+  if (!PL.playing) return;
+  const elapsed = now - PL.lastTick;
+  // Each frame = ~33ms real time (30fps SRT), adjusted by speed
+  const interval = 33 / PL.speed;
+  if (elapsed >= interval) {
+    PL.lastTick = now;
+    PL.frameIdx++;
+    if (PL.frameIdx >= PL.frames.length) {
+      PL.frameIdx = PL.frames.length - 1;
+      PL.playing = false;
+      document.getElementById('pl-play').innerHTML = '&#9654;';
+      document.getElementById('pl-play').classList.remove('playing');
+      updatePlayerUI();
+      return;
+    }
+    movePlayerTo(PL.frameIdx);
+  }
+  PL.raf = requestAnimationFrame(playerTick);
+}
+
+function movePlayerTo(idx) {
+  const fr = PL.frames[idx];
+  if (!fr || !PL.marker) return;
+  const ll = [fr.lat, fr.lon];
+  PL.marker.setLatLng(ll);
+  // build trail up to current position
+  const trailCoords = PL.frames.slice(0, idx + 1).map(f => [f.lat, f.lon]);
+  PL.trail.setLatLngs(trailCoords);
+  document.getElementById('pl-timeline').value = idx;
+  updatePlayerUI();
+}
+
+function seekPlayer(val) {
+  PL.frameIdx = parseInt(val);
+  movePlayerTo(PL.frameIdx);
+}
+
+function cycleSpeed() {
+  PL.speedIdx = (PL.speedIdx + 1) % PL.speeds.length;
+  PL.speed = PL.speeds[PL.speedIdx];
+  document.getElementById('pl-speed').textContent = PL.speed + 'x';
+}
+
+function updatePlayerUI() {
+  const fr = PL.frames[PL.frameIdx];
+  const total = PL.frames.length;
+  const curTime = fr?.t0 || '';
+  const endTime = PL.frames[total - 1]?.t1 || '';
+  // strip milliseconds for cleaner display
+  const fmt = t => t ? t.split(',')[0] : '0:00';
+  document.getElementById('pl-time').textContent = `${fmt(curTime)} / ${fmt(endTime)}`;
+  const info = [];
+  if (fr?.alt !== undefined) info.push(`${fr.alt.toFixed(1)}m`);
+  info.push(`${PL.frameIdx + 1}/${total}`);
+  document.getElementById('pl-info').textContent = info.join(' · ');
+}
 
 // ── Sync panel ─────────────────────────────────────────────────────────────────
 let syncOpen = false;
